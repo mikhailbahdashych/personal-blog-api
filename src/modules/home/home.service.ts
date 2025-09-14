@@ -70,7 +70,8 @@ export class HomeService {
             project.featuredImageId
           ),
           slug: project.slug,
-          projectType: project.projectType
+          projectType: project.projectType,
+          tags: project.tags
         }))
       ),
       Promise.all(
@@ -81,7 +82,8 @@ export class HomeService {
             post.featuredImageId
           ),
           slug: post.slug,
-          createdAt: post.createdAt
+          createdAt: post.createdAt,
+          tags: post.tags
         }))
       ),
       this.staticAssetsService.getStaticAsset(homePage.heroImageMainId),
