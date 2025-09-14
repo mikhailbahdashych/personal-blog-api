@@ -69,19 +69,19 @@ export class HomeService {
           featuredImage: await this.staticAssetsService.getStaticAsset(
             project.featuredImageId
           ),
-          slug: project.slug
+          slug: project.slug,
+          projectType: project.projectType
         }))
       ),
       Promise.all(
         posts.map(async (post) => ({
           title: post.title,
           description: post.description,
-          excerpt: post.excerpt,
           featuredImage: await this.staticAssetsService.getStaticAsset(
             post.featuredImageId
           ),
           slug: post.slug,
-          tags: post.tags
+          createdAt: post.createdAt
         }))
       ),
       this.staticAssetsService.getStaticAsset(homePage.heroImageMainId),
