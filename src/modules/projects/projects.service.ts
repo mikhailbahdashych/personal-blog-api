@@ -194,7 +194,7 @@ export class ProjectsService {
   }
 
   async getProjectsPageData(query: ListProjectsInterface) {
-    const { page, limit, search } = query;
+    const { page, limit, search, tag } = query;
     const parsedPage = Number(page);
     const parsedLimit = Number(limit);
 
@@ -210,6 +210,14 @@ export class ProjectsService {
         { title: { [Op.iLike]: `%${search}%` } },
         { description: { [Op.iLike]: `%${search}%` } }
       ];
+    }
+
+    if (tag) {
+      whereConditions[Op.and] = this.projectModel.sequelize!.literal(
+        `LOWER('${tag.replace(/'/g, "''")}') = ANY(
+          SELECT LOWER(unnest(tags))
+        )`
+      );
     }
 
     const [projectsPage, { rows: projects, count: totalProjects }] =
