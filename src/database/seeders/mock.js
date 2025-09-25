@@ -2098,6 +2098,7 @@ export default VulnerabilityReport;
           hero_title: 'Site Under Maintenance',
           title: 'Maintenance Mode',
           meta_title: 'Site Under Maintenance - Please Check Back Soon',
+          is_permanent: false,
           created_at: new Date(),
           updated_at: new Date()
         }

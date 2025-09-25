@@ -14,12 +14,13 @@ import { StaticAssetModel } from './static-asset.model';
 interface MaintenanceModeCreationAttributes {
   isActive: boolean;
   message: string;
-  fromDate: Date;
-  toDate: Date;
+  fromDate?: Date;
+  toDate?: Date;
   heroImageId: string;
   heroTitle: string;
   title: string;
   metaTitle: string;
+  isPermanent: boolean;
 }
 
 @Table({ tableName: 'maintenance_mode' })
@@ -49,25 +50,17 @@ export class MaintenanceMode extends Model<
 
   @Column({
     type: DataType.DATE,
-    allowNull: false,
+    allowNull: true,
     field: 'from_date'
   })
-  fromDate: Date;
+  fromDate?: Date;
 
   @Column({
     type: DataType.DATE,
-    allowNull: false,
+    allowNull: true,
     field: 'to_date'
   })
-  toDate: Date;
-
-  @CreatedAt
-  @Column({ field: 'created_at' })
-  createdAt: Date;
-
-  @UpdatedAt
-  @Column({ field: 'updated_at' })
-  updatedAt: Date;
+  toDate?: Date;
 
   @ForeignKey(() => StaticAssetModel)
   @Column({
@@ -97,4 +90,20 @@ export class MaintenanceMode extends Model<
     field: 'meta_title'
   })
   metaTitle: string;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+    field: 'is_permanent'
+  })
+  isPermanent: boolean;
+
+  @CreatedAt
+  @Column({ field: 'created_at' })
+  createdAt: Date;
+
+  @UpdatedAt
+  @Column({ field: 'updated_at' })
+  updatedAt: Date;
 }
