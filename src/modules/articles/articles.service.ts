@@ -320,9 +320,12 @@ export class ArticlesService {
     }
 
     if (tag) {
-      whereConditions.tags = {
-        [Op.contains]: [tag]
-      };
+      // Case-insensitive exact match for tag using raw PostgreSQL query
+      whereConditions[Op.and] = this.articleModel.sequelize!.literal(
+        `LOWER('${tag.replace(/'/g, "''")}') = ANY(
+          SELECT LOWER(unnest(tags))
+        )`
+      );
     }
 
     const [blogPage, { rows: articles, count: totalArticles }] = await Promise.all([

@@ -36,6 +36,7 @@ export class ProjectsService {
       projectFeaturedImageId,
       projectTags,
       projectMetaKeywords,
+      projectType,
       projectPublished
     } = data;
 
@@ -65,6 +66,7 @@ export class ProjectsService {
         published: projectPublished,
         tags: projectTags,
         metaKeywords: projectMetaKeywords,
+        projectType,
         featuredImageId: projectFeaturedImageId,
         userId
       },
@@ -89,6 +91,7 @@ export class ProjectsService {
       date: project.createdAt,
       tags: project.tags || [],
       metaKeywords: project.metaKeywords,
+      projectType: project.projectType,
       featuredImage: await this.staticAssetsService.getStaticAsset(
         project.featuredImageId
       ),
@@ -115,6 +118,7 @@ export class ProjectsService {
       featuredImageId: project.featuredImageId,
       tags: project.tags || [],
       metaKeywords: project.metaKeywords,
+      projectType: project.projectType,
       published: project.published,
       featured: project.featured,
       createdAt: project.createdAt,
@@ -126,7 +130,14 @@ export class ProjectsService {
   async getSlugs(): Promise<GetProjectsSlugsInterface[]> {
     const projects = await this.projectModel.findAll({
       where: { published: true },
-      attributes: ['slug', 'title', 'description', 'createdAt', 'tags'],
+      attributes: [
+        'slug',
+        'title',
+        'description',
+        'createdAt',
+        'tags',
+        'projectType'
+      ],
       order: [['createdAt', 'DESC']]
     });
 
@@ -135,7 +146,8 @@ export class ProjectsService {
       title: project.title,
       description: project.description,
       date: project.createdAt,
-      tags: project.tags || []
+      tags: project.tags || [],
+      projectType: project.projectType
     }));
   }
 
@@ -150,7 +162,8 @@ export class ProjectsService {
         content: data.projectContent,
         featuredImageId: data.projectFeaturedImageId,
         tags: data.projectTags,
-        metaKeywords: data.projectMetaKeywords
+        metaKeywords: data.projectMetaKeywords,
+        projectType: data.projectType
       },
       {
         where: { id: projectId },
@@ -181,7 +194,7 @@ export class ProjectsService {
   }
 
   async getProjectsPageData(query: ListProjectsInterface) {
-    const { page, limit, search } = query;
+    const { page, limit, search, tag } = query;
     const parsedPage = Number(page);
     const parsedLimit = Number(limit);
 
@@ -199,6 +212,14 @@ export class ProjectsService {
       ];
     }
 
+    if (tag) {
+      whereConditions[Op.and] = this.projectModel.sequelize!.literal(
+        `LOWER('${tag.replace(/'/g, "''")}') = ANY(
+          SELECT LOWER(unnest(tags))
+        )`
+      );
+    }
+
     const [projectsPage, { rows: projects, count: totalProjects }] =
       await Promise.all([
         this.projectsPageModel.findOne(),
@@ -214,6 +235,7 @@ export class ProjectsService {
             'description',
             'featuredImageId',
             'tags',
+            'projectType',
             'featured',
             'createdAt',
             'updatedAt'
@@ -241,6 +263,7 @@ export class ProjectsService {
               project.featuredImageId
             ),
             tags: project.tags,
+            projectType: project.projectType,
             featured: project.featured,
             createdAt: project.createdAt,
             updatedAt: project.updatedAt

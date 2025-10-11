@@ -1,4 +1,10 @@
-import { IsString, IsOptional, IsBoolean, IsDateString } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsDateString,
+  ValidateIf
+} from 'class-validator';
 
 export class UpdateMaintenanceModeDto {
   @IsOptional()
@@ -9,11 +15,11 @@ export class UpdateMaintenanceModeDto {
   @IsString()
   message?: string;
 
-  @IsOptional()
+  @ValidateIf((o) => !o.isPermanent && o.fromDate !== undefined)
   @IsDateString()
   fromDate?: string;
 
-  @IsOptional()
+  @ValidateIf((o) => !o.isPermanent && o.toDate !== undefined)
   @IsDateString()
   toDate?: string;
 
@@ -34,4 +40,8 @@ export class UpdateMaintenanceModeDto {
   @IsOptional()
   @IsString()
   metaTitle?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isPermanent?: boolean;
 }

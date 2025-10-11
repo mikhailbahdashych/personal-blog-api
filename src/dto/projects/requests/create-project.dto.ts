@@ -20,6 +20,10 @@ export class CreateProjectDto {
   @IsNotEmpty()
   projectMetaKeywords: string;
 
+  @IsString()
+  @IsNotEmpty()
+  projectType: string;
+
   @IsBoolean()
   projectPublished: boolean;
 }

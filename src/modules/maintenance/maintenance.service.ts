@@ -28,7 +28,8 @@ export class MaintenanceService {
       heroImage: heroImageUrl,
       heroTitle: maintenanceMode.heroTitle,
       title: maintenanceMode.title,
-      metaTitle: maintenanceMode.metaTitle
+      metaTitle: maintenanceMode.metaTitle,
+      isPermanent: maintenanceMode.isPermanent
     };
   }
 
@@ -48,7 +49,8 @@ export class MaintenanceService {
         heroImageId: randomAsset,
         heroTitle: 'Maintenance',
         title: 'Under Maintenance',
-        metaTitle: 'Site Under Maintenance'
+        metaTitle: 'Site Under Maintenance',
+        isPermanent: false
       });
     }
 
@@ -64,7 +66,8 @@ export class MaintenanceService {
       heroImageId,
       heroTitle,
       title,
-      metaTitle
+      metaTitle,
+      isPermanent
     } = data;
 
     const maintenanceMode = await this.maintenanceModeModel.findOne({
@@ -72,36 +75,45 @@ export class MaintenanceService {
     });
 
     if (maintenanceMode) {
-      await this.maintenanceModeModel.update(
-        {
-          isActive,
-          message,
-          fromDate: new Date(fromDate),
-          toDate: new Date(toDate),
-          heroImageId,
-          heroTitle,
-          title,
-          metaTitle
-        },
-        {
-          where: { id: maintenanceMode.id },
-          transaction: trx
-        }
-      );
+      const updateData: any = {
+        isActive,
+        message,
+        heroImageId,
+        heroTitle,
+        title,
+        metaTitle,
+        isPermanent
+      };
+
+      if (!isPermanent && fromDate && toDate) {
+        updateData.fromDate = new Date(fromDate);
+        updateData.toDate = new Date(toDate);
+      } else if (isPermanent) {
+        updateData.fromDate = null;
+        updateData.toDate = null;
+      }
+
+      await this.maintenanceModeModel.update(updateData, {
+        where: { id: maintenanceMode.id },
+        transaction: trx
+      });
     } else {
-      await this.maintenanceModeModel.create(
-        {
-          isActive,
-          message,
-          fromDate: new Date(fromDate),
-          toDate: new Date(toDate),
-          heroImageId,
-          heroTitle,
-          title,
-          metaTitle
-        },
-        { transaction: trx }
-      );
+      const createData: any = {
+        isActive,
+        message,
+        heroImageId,
+        heroTitle,
+        title,
+        metaTitle,
+        isPermanent
+      };
+
+      if (!isPermanent && fromDate && toDate) {
+        createData.fromDate = new Date(fromDate);
+        createData.toDate = new Date(toDate);
+      }
+
+      await this.maintenanceModeModel.create(createData, { transaction: trx });
     }
 
     return { success: true };

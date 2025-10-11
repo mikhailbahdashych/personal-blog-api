@@ -4,4 +4,5 @@ export interface GetProjectsSlugsInterface {
   description: string;
   date: Date;
   tags: string[];
+  projectType: string;
 }

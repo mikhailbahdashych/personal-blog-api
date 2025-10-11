@@ -854,6 +854,7 @@ console.log('Merkle Root:', merkleTree.getRoot());
           ],
           meta_keywords:
             'security monitoring, threat detection dashboard, real-time security, cybersecurity dashboard, security analytics, incident response',
+          project_type: 'Web Application',
           featured: true,
           published: true,
           user_id: userIds.admin,
@@ -1109,6 +1110,7 @@ generateRoutes().catch(console.error);
           ],
           meta_keywords:
             'blog platform, full-stack development, Angular SSR, NestJS API, SEO optimization, content management system, web development',
+          project_type: 'Full-Stack Platform',
           published: false,
           featured: true,
           user_id: userIds.admin,
@@ -1415,6 +1417,7 @@ export default VulnerabilityReport;
           ],
           meta_keywords:
             'vulnerability scanner, automated security testing, machine learning security, penetration testing tools, web application security, Python security',
+          project_type: 'Security Tool',
           published: true,
           featured: false,
           user_id: userIds.admin,
@@ -2095,6 +2098,7 @@ export default VulnerabilityReport;
           hero_title: 'Site Under Maintenance',
           title: 'Maintenance Mode',
           meta_title: 'Site Under Maintenance - Please Check Back Soon',
+          is_permanent: false,
           created_at: new Date(),
           updated_at: new Date()
         }

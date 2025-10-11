@@ -39,9 +39,10 @@ export class ProjectsController {
   async getProjectsPage(
     @Query('page') page: string,
     @Query('limit') limit: string,
-    @Query('search') search?: string
+    @Query('search') search?: string,
+    @Query('tag') tag?: string
   ) {
-    return this.projectsService.getProjectsPageData({ page, limit, search });
+    return this.projectsService.getProjectsPageData({ page, limit, search, tag });
   }
 
   // Admin endpoints

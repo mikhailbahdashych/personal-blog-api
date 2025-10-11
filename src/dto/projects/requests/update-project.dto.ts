@@ -24,4 +24,8 @@ export class UpdateProjectDto {
   @IsString()
   @IsNotEmpty()
   projectMetaKeywords: string;
+
+  @IsString()
+  @IsNotEmpty()
+  projectType: string;
 }
