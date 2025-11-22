@@ -79,6 +79,7 @@ import { CopyrightModule } from '@modules/copyright.module';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
+      // TODO: Don't forget to uncomment for production
       dialectOptions: {
         ssl: {
           require: true,
