@@ -112,8 +112,6 @@ export class StaticAssetsService {
       folderName: StaticStorages.STATIC_ASSETS
     });
 
-    console.log('fileName', fileName);
-
     const s3Url = this.s3Service.getFileUrl(fileName, StaticStorages.STATIC_ASSETS);
 
     return await this.staticAssetModel.create(
@@ -128,7 +126,6 @@ export class StaticAssetsService {
 
   async uploadFileFromBase64(payload: UploadStaticAssetInterface) {
     const { base64File, name, description, trx } = payload;
-    console.log('payload', payload);
 
     // Determine if it's an image or other file type
     if (base64File.startsWith('data:image/')) {
