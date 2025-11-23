@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsEnum } from 'class-validator';
 
 export class UploadBase64Dto {
   @IsString()
@@ -10,4 +10,7 @@ export class UploadBase64Dto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsEnum(['icon', 'projectPicture', 'articlePicture', 'staticAsset'])
+  assetType: 'icon' | 'projectPicture' | 'articlePicture' | 'staticAsset';
 }

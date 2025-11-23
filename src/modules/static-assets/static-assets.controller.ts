@@ -74,13 +74,14 @@ export class StaticAssetsController {
   @UsePipes(ValidationPipe)
   @Post('admin/assets/upload-file')
   async uploadFile(
-    @Body() { base64File, name, description }: UploadFileDto,
+    @Body() { base64File, name, description, assetType }: UploadFileDto,
     @TrxDecorator() trx?: Transaction
   ) {
     return this.staticAssetsService.uploadFileFromBase64({
       base64File,
       name,
       description,
+      assetType,
       trx
     });
   }
@@ -90,13 +91,14 @@ export class StaticAssetsController {
   @UsePipes(ValidationPipe)
   @Post('admin/assets/upload-base64')
   async uploadBase64Image(
-    @Body() { base64Image, name, description }: UploadBase64Dto,
+    @Body() { base64Image, name, description, assetType }: UploadBase64Dto,
     @TrxDecorator() trx?: Transaction
   ) {
     return this.staticAssetsService.uploadBase64Image({
       base64File: base64Image,
       name,
       description,
+      assetType,
       trx
     });
   }
