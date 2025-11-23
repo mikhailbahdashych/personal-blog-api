@@ -65,12 +65,14 @@ export class S3Service {
     folderName
   }: UploadBase64ImageInterface): Promise<string> {
     const { bucketName } = this.configService.awsSdkCredentials;
+    console.log('bucketName', bucketName);
 
     // Validate image format
     const type = base64Image.split(';')[0].split('/')[1];
     if (!['png', 'jpg', 'jpeg', 'svg+xml'].includes(type)) {
       throw new InvalidFormatException();
     }
+    console.log('type', type);
 
     const base64Data = Buffer.from(
       base64Image.replace(/^data:image\/[\w+\-]+;base64,/, ''),
@@ -81,6 +83,7 @@ export class S3Service {
       data: base64Data.toString() + Date.now().toString(),
       algorithm: CryptoHashAlgorithm.MD5
     });
+    console.log('imageHash', imageHash);
 
     const fileExtension = type === 'svg+xml' ? 'svg' : type;
     const fileName = `${imageHash}.${fileExtension}`;
@@ -92,6 +95,7 @@ export class S3Service {
       ContentEncoding: 'base64',
       ContentType: `image/${type}`
     };
+    console.log('params', params);
 
     await this.s3.upload(params).promise();
     return fileName;
