@@ -111,6 +111,7 @@ export class StaticAssetsService {
       base64Image: base64File,
       folderName: StaticStorages.STATIC_ASSETS
     });
+    console.log('fileName', fileName);
 
     const s3Url = this.s3Service.getFileUrl(fileName, StaticStorages.STATIC_ASSETS);
 
@@ -127,11 +128,18 @@ export class StaticAssetsService {
 
   async uploadFileFromBase64(payload: UploadStaticAssetInterface) {
     const { base64File, name, description, assetType, trx } = payload;
+    console.log('payload', payload);
 
     // Determine if it's an image or other file type
     if (base64File.startsWith('data:image/')) {
       // Use the existing base64 image upload method
-      return await this.uploadBase64Image({ base64File, name, description, assetType, trx });
+      return await this.uploadBase64Image({
+        base64File,
+        name,
+        description,
+        assetType,
+        trx
+      });
     } else {
       // For non-image files, use a generic base64 file upload
       const fileName = await this.s3Service.uploadBase64File({
