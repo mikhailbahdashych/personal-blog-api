@@ -9,7 +9,8 @@ import { json, urlencoded } from 'express';
     'http://localhost:8080', // Blog front
     'http://127.0.0.1:8080', // Blog front
     'http://localhost:4000', // Blog production front
-    'https://mikhailbahdashych.me'
+    'https://mikhailbahdashych.me',
+    'https://admin.mikhailbahdashych.me'
   ];
 
   const app = await NestFactory.create(AppModule);
