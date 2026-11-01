@@ -13,7 +13,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    # Matches docker-compose.dev.yml. Storage is the compose file's MinIO, not
+    # Matches docker-compose.dev.yml. Storage is the compose file's S3Mock, not
     # the real bucket: CI must not write to S3, and the asset test reads its
     # upload back anonymously, which the bucket only allows under prod/.
     env:
@@ -27,8 +27,8 @@ jobs:
       S3_ENDPOINT: http://localhost:9000
       S3_BUCKET: personal-blog-dev
       S3_KEY_PREFIX: ci
-      S3_ACCESS_KEY_ID: minioadmin
-      S3_SECRET_ACCESS_KEY: minioadmin
+      S3_ACCESS_KEY_ID: test
+      S3_SECRET_ACCESS_KEY: test
       S3_PUBLIC_URL: http://localhost:9000/personal-blog-dev
       FRONT_INTERNAL_URL: http://localhost:3000
       REVALIDATE_SECRET: ci-only-revalidate-secret
@@ -40,10 +40,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
-      - name: Start Postgres and MinIO
+      - name: Start Postgres and S3Mock
         run: |
-          docker compose -f docker-compose.dev.yml up -d --wait db minio
-          docker compose -f docker-compose.dev.yml run --rm minio-init
+          docker compose -f docker-compose.dev.yml up -d --wait db s3
+          # S3Mock has no healthcheck (no curl in the image); poll from here.
+          timeout 60 sh -c 'until curl -sf -o /dev/null http://localhost:9000/; do sleep 1; done'
       - run: npm run migrate
       - run: npm run test:e2e
 

@@ -84,14 +84,14 @@ natively for the seed/migrate scripts.
 ```bash
 cp .env.example .env        # defaults match the dev compose stack
 npm install
-npm run dev:infra           # postgres :5433 (+ MinIO :9000/:9001 if you use it)
+npm run dev:infra           # postgres :5433 + S3Mock :9000 (offline storage)
 npm run migrate
 npm run seed:dev            # ~100 posts, ~40 uploaded assets, admin credentials
 npm run start:dev           # http://localhost:4201/api
 ```
 
 Tests (need the dev stack): `npm run test:e2e` — 40 tests across auth, posts,
-search, assets/about/config and the DB pool. Run them with the MinIO lines from
+search, assets/about/config and the DB pool. Run them with the offline S3 lines from
 `.env.example`: the asset test reads its upload back anonymously, and the real
 bucket only allows that under `prod/`. CI does the same (`.github/workflows/deploy.yml`).
 
@@ -123,7 +123,7 @@ Credentials are resolved by the AWS SDK's default chain when `S3_ACCESS_KEY_ID`
 and `S3_SECRET_ACCESS_KEY` are unset, so a developer machine uses its existing
 `~/.aws/credentials` rather than keeping a second copy of a live key in `.env`.
 Set the pair explicitly where there is no ambient credential (containers, CI).
-To drop the AWS dependency entirely, point `S3_ENDPOINT` at the MinIO service in
+To drop the AWS dependency entirely, point `S3_ENDPOINT` at the S3Mock service in
 `docker-compose.dev.yml` — the commented block in `.env.example` has the values.
 
 ### What the dev seed creates
