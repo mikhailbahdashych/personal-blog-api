@@ -90,8 +90,10 @@ npm run seed:dev            # ~100 posts, ~40 uploaded assets, admin credentials
 npm run start:dev           # http://localhost:4201/api
 ```
 
-Tests (need the dev stack): `npm run test:e2e` — 35 tests across auth, posts,
-search, assets/about/config.
+Tests (need the dev stack): `npm run test:e2e` — 40 tests across auth, posts,
+search, assets/about/config and the DB pool. Run them with the MinIO lines from
+`.env.example`: the asset test reads its upload back anonymously, and the real
+bucket only allows that under `prod/`. CI does the same (`.github/workflows/deploy.yml`).
 
 | Script | Purpose |
 | --- | --- |
